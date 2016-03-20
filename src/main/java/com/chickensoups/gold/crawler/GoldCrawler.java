@@ -25,7 +25,7 @@ public class GoldCrawler {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Site sjc = new Site("http://www3.sjc.com.vn/");
+        Site sjc = new Site("http://www3.sjc.com.vn/xml/tygiavang.xml");
         Site doj = new Site("http://giavang.doji.vn");
         Site vangmieng = new Site("http://vangmieng.pnj.com.vn/data.xml");
         Site scb = new Site("http://scb.com.vn/goldrate.aspx");
@@ -43,7 +43,24 @@ public class GoldCrawler {
         sites.add(nguyenkim);
         sites.add(btmc);
 
-        //sjc
+//        //sjc
+//        try {
+//            Document doc = Jsoup.connect(sjc.getUrl()).get();
+//            sjc.setAllContent(doc.toString());
+//            Elements trs = doc.getElementsByTag("city");
+//            HashMap<String, String> data = new HashMap<>();
+//            for (int i = 1; i < trs.size(); i++) { //ignore trs.get(0;
+//                Element tr = trs.get(i);
+//                Element eachData = tr.getElementsByTag("item").first();
+//                String title = tr.attr("name");
+//                data.put(title + "-sjc-in", eachData.attr("buy"));
+//                data.put(title + "-sjc-out", eachData.attr("sell"));
+//            }
+//            sjc.setData(data);
+//        } catch (IOException ex) {
+//            Logger.getLogger(GoldCrawler.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+
 //        //giavang.doji.vn
 //        try {
 //            Document doc = Jsoup.connect(doj.getUrl()).get();
@@ -157,7 +174,6 @@ public class GoldCrawler {
 //        } catch (IOException ex) {
 //            Logger.getLogger(GoldCrawler.class.getName()).log(Level.SEVERE, null, ex);
 //        }
-
         //btmc
         try {
             Document doc = Jsoup.connect(vangmieng.getUrl()).get();
