@@ -224,7 +224,7 @@ public class GoldCrawler {
 //                        data.put(dataTag.getName() + "-" + tds.get(1).text() + "-in", tds.get(3).text());
 //                        data.put(dataTag.getName() + "-" + tds.get(1).text() + "-out", tds.get(4).text());
 //                    } else {
-//                        data.put(dataTag.getName() + "-" + tds.get(0).text() + "-in", tds.get(2).text());
+//                        data.put(dataTag.getgit statuName() + "-" + tds.get(0).text() + "-in", tds.get(2).text());
 //                        data.put(dataTag.getName() + "-" + tds.get(0).text() + "-out", tds.get(3).text());
 //                    }
 //                }
