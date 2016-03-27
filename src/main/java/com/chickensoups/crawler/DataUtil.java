@@ -7,6 +7,9 @@ package com.chickensoups.crawler;
 
 import java.sql.*;
 import java.sql.DriverManager;
+import java.util.Calendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -18,7 +21,7 @@ public class DataUtil {
     private final String driverUrl = "jdbc:mysql://localhost:3306/";
     private final String databaseName = "giavang";
     private final String userName = "root";
-    private final String password = "123";
+    private final String password = "1231";
 
     public DataUtil() {
         init();
@@ -54,4 +57,43 @@ public class DataUtil {
         return connection;
     }
 
+    public void insertGold(Gold gold) {
+        // the mysql insert statement
+        String query = " insert into " + gold.getTable() + " (buy, sell, date)"
+                + " values (?, ?, ?)";
+
+        // create the mysql insert preparedstatement
+        PreparedStatement preparedStmt;
+        try {
+            preparedStmt = connection.prepareStatement(query);
+            preparedStmt.setString(1, gold.getBuy());
+            preparedStmt.setString(2, gold.getSell());
+            preparedStmt.setString(3, gold.getDate());
+            // execute the preparedstatement
+            preparedStmt.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(DataUtil.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void insertExchangeRate(ExchangeRate exchangeRate) {
+        // the mysql insert statement
+        String query = " insert into " + exchangeRate.getTable() + " (currency, buy, sell, transfer, date)"
+                + " values (?, ?, ?, ?, ?)";
+
+        // create the mysql insert preparedstatement
+        PreparedStatement preparedStmt;
+        try {
+            preparedStmt = connection.prepareStatement(query);
+            preparedStmt.setString(1, exchangeRate.getCurrency());
+            preparedStmt.setString(2, exchangeRate.getBuy());
+            preparedStmt.setString(3, exchangeRate.getSell());
+            preparedStmt.setString(4, exchangeRate.getTransfer());
+            preparedStmt.setString(5, exchangeRate.getDate());
+            // execute the preparedstatement
+            preparedStmt.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(DataUtil.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

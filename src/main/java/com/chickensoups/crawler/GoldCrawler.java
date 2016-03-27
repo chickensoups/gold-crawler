@@ -5,7 +5,11 @@
  */
 package com.chickensoups.crawler;
 
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,10 +24,18 @@ import org.jsoup.select.Elements;
  */
 public class GoldCrawler {
 
+    static String date;
+    static DataUtil dataUtil;
+
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        //create a sql date string so we can use it in our INSERT statement
+        Calendar calendar = Calendar.getInstance();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        date = dateFormat.format(calendar.getTime());
+        dataUtil = new DataUtil();
 
         Site sjc = crawlSJC();
         Site doj = crawlDOJ();
@@ -56,12 +68,18 @@ public class GoldCrawler {
             sjc.setAllContent(doc.toString());
             Elements trs = doc.getElementsByTag("city");
             HashMap<String, String> data = new HashMap<>();
-            for (int i = 1; i < trs.size(); i++) { //ignore trs.get(0;
+            for (int i = 0; i < trs.size(); i++) { //ignore trs.get(0;
                 Element tr = trs.get(i);
                 Element eachData = tr.getElementsByTag("item").first();
                 String title = tr.attr("name");
                 data.put(title + "-sjc-in", eachData.attr("buy"));
                 data.put(title + "-sjc-out", eachData.attr("sell"));
+                if (title.toLowerCase().contains("hà nội")) {
+                    dataUtil.insertGold(new Gold("gold_sjchanoi", eachData.attr("buy"), eachData.attr("sell"), date));
+                }
+                if (title.toLowerCase().contains("hồ chí minh")) {
+                    dataUtil.insertGold(new Gold("gold_sjctphcm", eachData.attr("buy"), eachData.attr("sell"), date));
+                }
             }
             sjc.setData(data);
         } catch (Exception ex) {
@@ -90,6 +108,13 @@ public class GoldCrawler {
                 String outPrice = tds.get(2).text();
                 data.put(title + "-in", inPrice);
                 data.put(title + "-out", outPrice);
+
+                if (title.toLowerCase().contains("doji hn buôn")) {
+                    dataUtil.insertGold(new Gold("gold_dojihanoi", tds.get(1).text(), tds.get(2).text(), date));
+                }
+                if (title.toLowerCase().contains("doji hcm buôn")) {
+                    dataUtil.insertGold(new Gold("gold_dojihcm", tds.get(1).text(), tds.get(2).text(), date));
+                }
             }
             doj.setData(data);
         } catch (Exception ex) {
@@ -151,7 +176,7 @@ public class GoldCrawler {
                     .cookie("ASP.NET_SessionId", "a5uomfum0p412qf0cwbajv45")
                     .userAgent("Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:45.0) Gecko/20100101 Firefox/45.0")
                     .referrer("http://scb.com.vn").timeout(5000).get();
-            
+
             scb.setAllContent(doc.toString());
             System.out.println(doc);
             Element dataTable = doc.getElementsByClass("dp1-table").first();
