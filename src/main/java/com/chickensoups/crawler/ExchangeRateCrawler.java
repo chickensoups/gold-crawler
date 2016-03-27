@@ -18,8 +18,9 @@ public class ExchangeRateCrawler {
     Site vpbank = new Site("http://www.vpbank.com.vn/vpb-exchange-rates");
     Site sacombank = new Site("http://www.sacombank.com.vn/Pages/default.aspx");
     Site scb = new Site("https://www.scb.com.vn/exchangerate.aspx");
-    Site eximbank = new Site("https://www.eximbank.com.vn/home/Static/Exchangerate.aspx");
-    Site shb = new Site("http://www.shb.com.vn/tabid/465/default.aspx");
+    Site eximbank = new Site("https://www.eximbank.com.vn/home/Static/Exchangerate.aspx");//https://eximbank.com.vn/WebsiteExrate/ExchangeRate_vn_2012.aspx
+    Site shb = new Site("http://www.shb.com.vn/tabid/465/default.aspx");//http://www.shb.com.vn/tygia/fx/exrate/shbfx.xml
+    
     
     
 }

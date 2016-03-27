@@ -40,7 +40,7 @@ public class GoldCrawler {
         Site sjc = crawlSJC();
         Site doj = crawlDOJ();
         Site vangmieng = crawlVangMieng();
-//        Site scb = crawlSCB();
+        Site scb = crawlSCB();
         Site mytho = crawlMyTho();
         Site nguyenkim = crawlNguyenKim();
         Site btmc = crawlBTMC();
@@ -80,7 +80,7 @@ public class GoldCrawler {
                 if (title.toLowerCase().contains("hồ chí minh")) {
                     dataUtil.insertGold(new Gold("gold_sjchcm", eachData.attr("buy"), eachData.attr("sell"), date));
                 }
-                
+
                 if (title.toLowerCase().contains("nẵng")) {
                     dataUtil.insertGold(new Gold("gold_sjcdn", eachData.attr("buy"), eachData.attr("sell"), date));
                 }
@@ -168,23 +168,26 @@ public class GoldCrawler {
         Site scb = new Site("http://scb.com.vn/goldrate.aspx/");
         System.out.println(">>>>> START crawl scb...");
         try {
+//            Document doc = Jsoup.connect(scb.getUrl())
+//                    .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
+//                    .header("Accept-Encoding", "gzip, deflate, br")
+//                    .header("Accept-Language", "en-US,en;q=0.5")
+//                    .header("Connection", "keep-alive")
+//                    .header("Host", "scb.com.vn")
+//                    .cookie("AspxAutoDetectCookieSupport", "1")
+//                    .cookie("TS01bbff28", "014a8170720ccd275061e6993450578b8b8aa6347dd6d3702b47db56c817345533edd22ea80e2be68fd03d726b255ad9c2536546366d0da8b8059351e37b802db63082ea2b3e35e2e4abe816b19f5f50dda55adc3c")
+//                    .cookie(".ASPXANONYMOUS", "JbBbiqa50QEkAAAAYzhmMmQ5MGMtYTZhMC00ZWY5LTg4NWQtNzk4NzI3NGE0ODZlJUlgjr8FvHfN6nSXUIM7xy3PBsQ1")
+//                    .cookie("ASP.NET_SessionId", "a5uomfum0p412qf0cwbajv45")
+//                    .userAgent("Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:45.0) Gecko/20100101 Firefox/45.0")
+//                    .referrer("http://scb.com.vn").timeout(5000).get();
             Document doc = Jsoup.connect(scb.getUrl())
-                    .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
-                    .header("Accept-Encoding", "gzip, deflate, br")
-                    .header("Accept-Language", "en-US,en;q=0.5")
-                    .header("Connection", "keep-alive")
-                    .header("Host", "scb.com.vn")
-                    .cookie("AspxAutoDetectCookieSupport", "1")
-                    .cookie("TS01bbff28", "014a8170720ccd275061e6993450578b8b8aa6347dd6d3702b47db56c817345533edd22ea80e2be68fd03d726b255ad9c2536546366d0da8b8059351e37b802db63082ea2b3e35e2e4abe816b19f5f50dda55adc3c")
-                    .cookie(".ASPXANONYMOUS", "JbBbiqa50QEkAAAAYzhmMmQ5MGMtYTZhMC00ZWY5LTg4NWQtNzk4NzI3NGE0ODZlJUlgjr8FvHfN6nSXUIM7xy3PBsQ1")
-                    .cookie("ASP.NET_SessionId", "a5uomfum0p412qf0cwbajv45")
-                    .userAgent("Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:45.0) Gecko/20100101 Firefox/45.0")
-                    .referrer("http://scb.com.vn").timeout(5000).get();
+                    .followRedirects(false)
+                    .post();
 
             scb.setAllContent(doc.toString());
-            System.out.println(doc);
+//            System.out.println(doc);
             Element dataTable = doc.getElementsByClass("dp1-table").first();
-//            System.out.println(dataTable);
+            System.out.println(dataTable);
             Element sjc1luong = dataTable.getElementsByTag("tr").first();
             Element sjc125chi = dataTable.getElementsByTag("tr").get(1);
 
