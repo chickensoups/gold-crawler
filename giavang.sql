@@ -2,7 +2,8 @@
 SQLyog Enterprise - MySQL GUI v8.12 
 MySQL - 5.0.67-community-nt : Database - giavang
 *********************************************************************
-*/
+*/
+
 
 /*!40101 SET NAMES utf8 */;
 
@@ -84,11 +85,11 @@ CREATE TABLE `giavangvn` (
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=ascii;
 
-/*Table structure for table `gold_dojihanoi` */
+/*Table structure for table `gold_dojihn` */
 
-DROP TABLE IF EXISTS `gold_dojihanoi`;
+DROP TABLE IF EXISTS `gold_dojihn`;
 
-CREATE TABLE `gold_dojihanoi` (
+CREATE TABLE `gold_dojihn` (
   `id` int(1) NOT NULL auto_increment,
   `buy` char(255) default NULL,
   `sell` char(255) default NULL,
@@ -120,11 +121,11 @@ CREATE TABLE `gold_dongabank` (
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=ascii;
 
-/*Table structure for table `gold_sjchanoi` */
+/*Table structure for table `gold_sjchn` */
 
-DROP TABLE IF EXISTS `gold_sjchanoi`;
+DROP TABLE IF EXISTS `gold_sjchn`;
 
-CREATE TABLE `gold_sjchanoi` (
+CREATE TABLE `gold_sjchn` (
   `id` int(1) NOT NULL auto_increment,
   `buy` char(255) default NULL,
   `sell` char(255) default NULL,
@@ -134,9 +135,9 @@ CREATE TABLE `gold_sjchanoi` (
 
 /*Table structure for table `gold_sjctphcm` */
 
-DROP TABLE IF EXISTS `gold_sjctphcm`;
+DROP TABLE IF EXISTS `gold_sjchcm`;
 
-CREATE TABLE `gold_sjctphcm` (
+CREATE TABLE `gold_sjchcm` (
   `id` int(1) NOT NULL auto_increment,
   `buy` char(255) default NULL,
   `sell` char(255) default NULL,
@@ -144,13 +145,13 @@ CREATE TABLE `gold_sjctphcm` (
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=ascii;
 
-/*Table structure for table `gold_sjcđanang` */
+/*Table structure for table `gold_sjcdn` */
 
-DROP TABLE IF EXISTS `gold_sjcđanang`;
+DROP TABLE IF EXISTS `gold_sjcdn`;
 
-CREATE TABLE `gold_sjcđanang` (
+CREATE TABLE `gold_sjcdn` (
   `id` int(1) NOT NULL auto_increment,
-  `buyt` char(255) default NULL,
+  `buy` char(255) default NULL,
   `sell` char(255) default NULL,
   `date` datetime default NULL,
   PRIMARY KEY  (`id`)

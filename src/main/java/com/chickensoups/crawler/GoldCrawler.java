@@ -75,10 +75,14 @@ public class GoldCrawler {
                 data.put(title + "-sjc-in", eachData.attr("buy"));
                 data.put(title + "-sjc-out", eachData.attr("sell"));
                 if (title.toLowerCase().contains("hà nội")) {
-                    dataUtil.insertGold(new Gold("gold_sjchanoi", eachData.attr("buy"), eachData.attr("sell"), date));
+                    dataUtil.insertGold(new Gold("gold_sjchn", eachData.attr("buy"), eachData.attr("sell"), date));
                 }
                 if (title.toLowerCase().contains("hồ chí minh")) {
-                    dataUtil.insertGold(new Gold("gold_sjctphcm", eachData.attr("buy"), eachData.attr("sell"), date));
+                    dataUtil.insertGold(new Gold("gold_sjchcm", eachData.attr("buy"), eachData.attr("sell"), date));
+                }
+                
+                if (title.toLowerCase().contains("nẵng")) {
+                    dataUtil.insertGold(new Gold("gold_sjcdn", eachData.attr("buy"), eachData.attr("sell"), date));
                 }
             }
             sjc.setData(data);
@@ -110,7 +114,7 @@ public class GoldCrawler {
                 data.put(title + "-out", outPrice);
 
                 if (title.toLowerCase().contains("doji hn buôn")) {
-                    dataUtil.insertGold(new Gold("gold_dojihanoi", tds.get(1).text(), tds.get(2).text(), date));
+                    dataUtil.insertGold(new Gold("gold_dojihn", tds.get(1).text(), tds.get(2).text(), date));
                 }
                 if (title.toLowerCase().contains("doji hcm buôn")) {
                     dataUtil.insertGold(new Gold("gold_dojihcm", tds.get(1).text(), tds.get(2).text(), date));
