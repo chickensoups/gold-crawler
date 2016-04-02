@@ -185,7 +185,6 @@ public class GoldCrawler {
                     .post();
 
             scb.setAllContent(doc.toString());
-//            System.out.println(doc);
             Element dataTable = doc.getElementsByClass("dp1-table").first();
             System.out.println(dataTable);
             Element sjc1luong = dataTable.getElementsByTag("tr").first();

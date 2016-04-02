@@ -14,7 +14,8 @@ import java.sql.Date;
 public class ExchangeRate {
 
     private String table;
-    private String currency;
+    private String code;
+    private String name;
     private String buy;
     private String sell;
     private String transfer;
@@ -23,9 +24,10 @@ public class ExchangeRate {
     public ExchangeRate() {
     }
 
-    public ExchangeRate(String table, String currency, String buy, String sell, String transfer, String date) {
+    public ExchangeRate(String table, String code, String name, String buy, String sell, String transfer, String date) {
         this.table = table;
-        this.currency = currency;
+        this.code = code;
+        this.name = name;
         this.buy = buy;
         this.sell = sell;
         this.transfer = transfer;
@@ -40,12 +42,20 @@ public class ExchangeRate {
         this.table = table;
     }
 
-    public String getCurrency() {
-        return currency;
+    public String getCode() {
+        return code;
     }
 
-    public void setCurrency(String currency) {
-        this.currency = currency;
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getBuy() {
@@ -80,4 +90,8 @@ public class ExchangeRate {
         this.date = date;
     }
 
+    @Override
+    public String toString() {
+        return code + "--" + name + "--" + buy + "--" + transfer + "--" + sell + "--" + date;
+    }
 }

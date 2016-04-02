@@ -85,7 +85,7 @@ public class DataUtil {
         PreparedStatement preparedStmt;
         try {
             preparedStmt = connection.prepareStatement(query);
-            preparedStmt.setString(1, exchangeRate.getCurrency());
+            preparedStmt.setString(1, exchangeRate.getCode());
             preparedStmt.setString(2, exchangeRate.getBuy());
             preparedStmt.setString(3, exchangeRate.getSell());
             preparedStmt.setString(4, exchangeRate.getTransfer());
