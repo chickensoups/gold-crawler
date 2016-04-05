@@ -21,7 +21,7 @@ public class DataUtil {
     private final String driverUrl = "jdbc:mysql://localhost:3306/";
     private final String databaseName = "giavang";
     private final String userName = "root";
-    private final String password = "1231";
+    private final String password = "123";
 
     public DataUtil() {
         init();

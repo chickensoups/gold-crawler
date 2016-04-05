@@ -5,14 +5,12 @@
  */
 package com.chickensoups.crawler;
 
-import static com.chickensoups.crawler.GoldCrawler.date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.HashMap;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jdk.nashorn.internal.parser.JSONParser;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -24,29 +22,36 @@ import org.jsoup.select.Elements;
  */
 public class ExchangeRateCrawler {
 
-    static String date;
-    static DataUtil dataUtil;
+    private final String date;
+    private final DataUtil dataUtil;
 
-    public static void main(String[] args) {
-        //create a sql date string so we can use it in our INSERT statement
-        Calendar calendar = Calendar.getInstance();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        date = dateFormat.format(calendar.getTime());
-        dataUtil = new DataUtil();
-
-//        Site vietcombank = crawlVietcombank("money_vietcombank");
-//        Site vietinbank = crawlVietinbank("money_vietinbank");
-//        Site tpbank = crawlTpbank("money_tpbank"); //handshake failed
-//        Site vpbank = crawlVpbank("money_vpbank");
-//        Site sacombank = crawlSacombank("money_sacombank");
-//        Site scb = crawlScb("money_scb");
-//        Site eximbank = crawlEximbank("money_eximbank"); //wrong selector
-//        Site shb = crawlShb("money_shb");
-//        Site msb = crawlMsb("money_msb");//parse json
+    public ExchangeRateCrawler(String date, DataUtil dataUtil) {
+        this.date = date;
+        this.dataUtil = dataUtil;
     }
 
-    //crawl site
-    private static Site crawlVietcombank(String table) {
+    public void crawl() {
+        System.out.println("Start crawl vietcombank");
+        Site vietcombank = crawlVietcombank("money_vietcombank");
+        System.out.println("Start crawl vietinbank");
+        Site vietinbank = crawlVietinbank("money_vietinbank");
+        System.out.println("Start crawl tpbank");
+        Site tpbank = crawlTpbank("money_tpbank"); //handshake failed
+        System.out.println("Start crawl vpbank");
+        Site vpbank = crawlVpbank("money_vpbank");
+        System.out.println("Start crawl sacombank");
+        Site sacombank = crawlSacombank("money_sacombank");
+        System.out.println("Start crawl scb");
+        Site scb = crawlScb("money_scb");
+        System.out.println("Start crawl shb");
+        Site shb = crawlShb("money_shb");
+        System.out.println("Start crawl eximbank");
+        Site eximbank = crawlEximbank("money_eximbank");
+//          Site msb = crawlMsb("money_msb");//have no table name money_msb
+    }
+
+    //crawl vietcombank
+    private Site crawlVietcombank(String table) {
         Site site = new Site("http://www.vietcombank.com.vn/exchangerates/?lang=en");
         try {
             Document doc = Jsoup.connect(site.getUrl()).get();
@@ -66,8 +71,8 @@ public class ExchangeRateCrawler {
         return site;
     }
 
-    //crawl site
-    private static Site crawlVietinbank(String table) {
+    //crawl viettinbank
+    private Site crawlVietinbank(String table) {
         Site site = new Site("https://www.vietinbank.vn/web/home/vn/ty-gia/");
 
         try {
@@ -95,13 +100,12 @@ public class ExchangeRateCrawler {
         return site;
     }
 
-    //crawl site
-    private static Site crawlTpbank(String table) {
+    //crawl tpbank
+    private Site crawlTpbank(String table) {
         Site site = new Site("https://tpb.vn/financial-toolkit/ty-gia-ngoai-te");
 
         try {
-            Document doc = Jsoup.connect(site.getUrl()).timeout(10000).get();
-            System.out.println(doc);
+            Document doc = Jsoup.connect(site.getUrl()).timeout(20000).get();
             site.setAllContent(doc.toString());
             Element dataTable = doc.getElementById("forex-rate-table");
             Elements trs = dataTable.getElementsByTag("tr");
@@ -118,26 +122,31 @@ public class ExchangeRateCrawler {
         return site;
     }
 
-    //crawl site
-    private static Site crawlMsb(String table) {
+    //crawl msb
+    private Site crawlMsb(String table) {
         String selectedDate = date.substring(8, 10) + "%2F" + date.substring(5, 7) + "%2F" + date.substring(0, 4);
-        System.out.println(date);
-        System.out.println(selectedDate);
         Site site = new Site("https://www.msb.com.vn/.msb-crud-portlets/exchangeRate?dateSelected=" + selectedDate);
 
         try {
             Document doc = Jsoup.connect(site.getUrl()).ignoreContentType(true).get();
-            site.setAllContent(doc.toString());
-            System.out.println(doc);
-        } catch (Exception ex) {
+            JSONArray array = new JSONArray(doc.body().text());
+            JSONArray data = (JSONArray) array.get(0);
+
+            for (int i = 0; i < data.length(); i++) {
+                JSONObject obj = data.getJSONObject(i);
+                ExchangeRate exchangeRate = new ExchangeRate(table, obj.getString("code"), obj.getString("code"), obj.getString("buyingOut"), obj.getString("sellingOut"), obj.getString("sellingOut"), date);
+                System.out.println(exchangeRate);
+                dataUtil.insertExchangeRate(exchangeRate);
+            }
+        } catch (IOException | JSONException ex) {
             Logger.getLogger(ExchangeRateCrawler.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("@@@ ERROR crawl " + table);
+//            System.out.println("@@@ ERROR crawl " + table);
         }
         return site;
     }
 
-    //crawl site
-    private static Site crawlVpbank(String table) {
+    //crawl vpbank
+    private Site crawlVpbank(String table) {
         Site site = new Site("http://www.vpbank.com.vn/vpb-exchange-rates");
 
         try {
@@ -159,12 +168,12 @@ public class ExchangeRateCrawler {
         return site;
     }
 
-    //crawl site
-    private static Site crawlSacombank(String table) {
+    //crawl sacombank
+    private Site crawlSacombank(String table) {
         Site site = new Site("http://www.sacombank.com.vn/Pages/default.aspx");
 
         try {
-            Document doc = Jsoup.connect(site.getUrl()).get();
+            Document doc = Jsoup.connect(site.getUrl()).timeout(20000).get();
             site.setAllContent(doc.toString());
             Element dataTable = doc.getElementById("country1");
             Elements trs = dataTable.getElementsByTag("tr");
@@ -181,12 +190,12 @@ public class ExchangeRateCrawler {
         return site;
     }
 
-    //crawl site
-    private static Site crawlScb(String table) {
+    //crawl scb
+    private Site crawlScb(String table) {
         Site site = new Site("https://www.scb.com.vn/exchangerate.aspx");
 
         try {
-            Document doc = Jsoup.connect(site.getUrl()).get();
+            Document doc = Jsoup.connect(site.getUrl()).timeout(20000).get();
             site.setAllContent(doc.toString());
             Element dataTable = doc.getElementsByClass("dp1-table").first();
             Elements trs = dataTable.getElementsByTag("tr");
@@ -203,22 +212,27 @@ public class ExchangeRateCrawler {
         return site;
     }
 
-    //crawl site
-    private static Site crawlEximbank(String table) {
+    //crawl eximbank
+    private Site crawlEximbank(String table) {
         Site site = new Site("https://eximbank.com.vn/WebsiteExrate/ExchangeRate_vn_2012.aspx");
 
         try {
             Document doc = Jsoup.connect(site.getUrl()).get();
             site.setAllContent(doc.toString());
-            Elements trs = doc.getElementsByClass("tieude_tygia2").parents();
+            Elements trs = new Elements();
+            try {
+                trs = doc.select("table").get(9).getElementsByTag("tr");
+            } catch (Exception ex) {
+                System.out.println("Error eximbank when get table");
+            }
+
             for (int i = 1; i < trs.size(); i++) {
-                System.out.println("===============");
-                System.out.println(trs.get(i).text());
-                System.out.println("==============");
-//                Elements tds = trs.get(i).getElementsByClass("box_tygia");
-//                ExchangeRate exchangeRate = new ExchangeRate(table, trs.get(i).firstElementSibling().text(), trs.get(i).firstElementSibling().text(), tds.get(0).text(), tds.get(2).text(), tds.get(1).text(), date);
-//                System.out.println(exchangeRate);
-//                dataUtil.insertExchangeRate(exchangeRate);
+                if (trs.get(i).attr("height").isEmpty()) {
+                    Elements tds = trs.get(i).getElementsByTag("td");
+                    ExchangeRate exchangeRate = new ExchangeRate(table, tds.get(0).text().trim(), tds.get(0).text().trim(), tds.get(1).text(), tds.get(5).text(), tds.get(3).text(), date);
+                    System.out.println(exchangeRate);
+                    dataUtil.insertExchangeRate(exchangeRate);
+                }
             }
         } catch (Exception ex) {
             Logger.getLogger(ExchangeRateCrawler.class.getName()).log(Level.SEVERE, null, ex);
@@ -227,8 +241,8 @@ public class ExchangeRateCrawler {
         return site;
     }
 
-    //crawl site
-    private static Site crawlShb(String table) {
+    //crawl shb
+    private Site crawlShb(String table) {
         Site site = new Site("http://www.shb.com.vn/tygia/fx/exrate/shbfx.xml");
         try {
             Document doc = Jsoup.connect(site.getUrl()).get();

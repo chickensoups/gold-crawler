@@ -5,11 +5,7 @@
  */
 package com.chickensoups.crawler;
 
-import java.sql.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,26 +20,22 @@ import org.jsoup.select.Elements;
  */
 public class GoldCrawler {
 
-    static String date;
-    static DataUtil dataUtil;
+    private final String date;
+    private final DataUtil dataUtil;
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        //create a sql date string so we can use it in our INSERT statement
-        Calendar calendar = Calendar.getInstance();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        date = dateFormat.format(calendar.getTime());
-        dataUtil = new DataUtil();
+    public GoldCrawler(String date, DataUtil dataUtil) {
+        this.date = date;
+        this.dataUtil = dataUtil;
+    }
 
+    public void crawl() {
         Site sjc = crawlSJC();
         Site doj = crawlDOJ();
         Site vangmieng = crawlVangMieng();
-        Site scb = crawlSCB();
         Site mytho = crawlMyTho();
         Site nguyenkim = crawlNguyenKim();
         Site btmc = crawlBTMC();
+//        Site scb = crawlSCB();//handshake failed
 
         System.out.println(sjc.getData());
         System.out.println("===========");
@@ -59,7 +51,7 @@ public class GoldCrawler {
         System.out.println("===========");
     }
 
-    private static Site crawlSJC() {
+    private Site crawlSJC() {
         //sjc
         Site sjc = new Site("http://www3.sjc.com.vn/xml/tygiavang.xml");
         try {
@@ -94,7 +86,7 @@ public class GoldCrawler {
         return sjc;
     }
 
-    private static Site crawlDOJ() {
+    private Site crawlDOJ() {
         //giavang.doji.vn
         Site doj = new Site("http://giavang.doji.vn");
         System.out.println(">>>>> START crawl giavang.doji.vn...");
@@ -129,7 +121,7 @@ public class GoldCrawler {
         return doj;
     }
 
-    private static Site crawlVangMieng() {
+    private Site crawlVangMieng() {
         //vangmieng
         Site vangmieng = new Site("http://vangmieng.pnj.com.vn/data.xml");
         System.out.println(">>>>> START crawl vangmieng...");
@@ -163,7 +155,7 @@ public class GoldCrawler {
         return vangmieng;
     }
 
-    private static Site crawlSCB() {
+    private Site crawlSCB() {
         //scb
         Site scb = new Site("http://scb.com.vn/goldrate.aspx/");
         System.out.println(">>>>> START crawl scb...");
@@ -212,7 +204,7 @@ public class GoldCrawler {
         return scb;
     }
 
-    private static Site crawlMyTho() {
+    private Site crawlMyTho() {
         //mytho
         Site mytho = new Site("http://115.78.208.5:8080/mytho/");
         System.out.println(">>>>> START crawl mytho...");
@@ -242,7 +234,7 @@ public class GoldCrawler {
         return mytho;
     }
 
-    private static Site crawlNguyenKim() {
+    private Site crawlNguyenKim() {
         //nguyenkim
         Site nguyenkim = new Site("http://115.78.208.5:8080/nguyenkim/");
         System.out.println(">>>>> START crawl nguyenkim...");
@@ -272,7 +264,7 @@ public class GoldCrawler {
         return nguyenkim;
     }
 
-    private static Site crawlBTMC() {
+    private Site crawlBTMC() {
         //btmc
         System.out.println(">>>>> START crawl BTMC...");
         Site btmc = new Site("http://btmc.com.vn/");
